@@ -10,4 +10,9 @@ class ViewProject extends ViewRecord
     protected static string $resource = ProjectResource::class;
 
     protected static ?string $title = 'Project overzicht';
+
+    public function getBreadcrumb(): string
+    {
+        return 'overzicht';
+    }
 }

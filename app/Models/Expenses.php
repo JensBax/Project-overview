@@ -18,6 +18,7 @@ class Expenses extends Model
     protected $fillable = [
         'description',
         'price',
+        'invoice',
         'users_id',
         'projects_id',
     ];

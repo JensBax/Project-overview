@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('client');
             $table->double('price');
             $table->integer('duration_in_days');
+            $table->boolean('is_finished')->default(false);
             $table->foreignId('users_id')->references('id')->on('users');
             $table->timestamps();
         });

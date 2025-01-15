@@ -24,6 +24,8 @@ class Projects extends Model
         'price',
         'users_id',
         'duration_in_days',
+        'status',
+        'is_finished',
     ];
 
     public function users(): BelongsTo
