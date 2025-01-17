@@ -28,9 +28,9 @@ class ListProjects extends ListRecords
     public function getTabs(): array
     {
         return [
-            null => Tab::make('Alle projecten'),
-            'Niet afgerond' => Tab::make()->query(fn ($query) => $query->where('is_finished', false)),
+            'Lopend' => Tab::make()->query(fn ($query) => $query->where('is_finished', false)),
             'Afgerond' => Tab::make()->query(fn ($query) => $query->where('is_finished', true)),
+            null => Tab::make('Alle projecten'),
         ];
     }
 }

@@ -22,6 +22,7 @@ use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Resources\Pages\Page;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
@@ -91,6 +92,13 @@ class ProjectResource extends Resource
                 TextColumn::make('address')->label('Adres')
                     ->searchable(),
                 TextColumn::make('users.business')->label('Bedrijf'),
+                IconColumn::make('is_finished')
+                    ->icon(fn (Model $record) => $record->is_finished ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
+                    ->colors([
+                        'danger' => 0,
+                        'success' => 1,
+                    ])
+                    ->label('Status'),
                 TextColumn::make('updated_at')->hidden()
             ])
             ->searchPlaceholder('Zoek op adres')
@@ -132,11 +140,30 @@ class ProjectResource extends Resource
                     ->columns(1),
                 InfolistSection::make()
                     ->schema([
+                        TextEntry::make('expenses')->label('Totale uitgaven')->state(function (Model $record): string {
+                            return Expenses::query()->where('projects_id', $record->id)->sum('price');
+                        })->money('EUR'),
                         TextEntry::make('profit')->label('Winst')->state(function (Model $record): string {
                             return self::calculateProfit($record);
+                        })->money('EUR'),
+                        TextEntry::make('activities')->label('Totale uren')->state(function (Model $record): string {
+                            return Activities::query()->where('projects_id', $record->id)->sum('hour_amount');
                         }),
                     ])
-                    ->columns(1),
+                    ->columns(3),
+                RepeatableEntry::make('per_person')
+                    ->label('Per persoon')
+                    ->state(function (Model $record): array {
+                        return self::calculateProfitPerPerson($record);
+                    })
+                    ->schema([
+                        TextEntry::make('business')->label('Naam'),
+                        TextEntry::make('hour_amount')->numeric()->label('Hoeveelheid uren'),
+                        TextEntry::make('profit')->numeric()->label('Winst')->money('EUR'),
+                    ])
+                    ->columnSpanFull()
+                    ->columns(4)
+                    ->visible(fn (Model $record): bool => $record->activities->isNotEmpty()),
             ]);
     }
 
@@ -178,7 +205,7 @@ class ProjectResource extends Resource
 
     public static function calculateProfit($record): string
     {
-        return $record->price . ' - ' . $record->expenses->sum('price') . ' = ' . '€' . $record->price - $record->expenses->sum('price');
+        return $record->price - $record->expenses->sum('price');
     }
 
     public static function calculateProfitPerPerson($record): array
@@ -193,11 +220,11 @@ class ProjectResource extends Resource
 
         $uniquePersons = array_unique($persons);
         foreach ($uniquePersons as $person) {
-            $userName = User::query()->find($person)->name;
+            $business = User::query()->find($person)->business;
             $hourAmount = Activities::query()->where('users_id', $person)->where('projects_id', $projectId)->sum('hour_amount');
             $netProfit = $record->price - $record->expenses->sum('price');
             $profit_per_person = $netProfit / $totalHours * $hourAmount;
-            $per_person[] = ['name' => $userName, 'hour_amount' => $hourAmount, 'profit' => $profit_per_person];
+            $per_person[] = ['business' => $business, 'hour_amount' => $hourAmount, 'profit' => $profit_per_person];
         }
         $record['per_person'] = $per_person;
         return $per_person;
