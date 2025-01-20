@@ -84,6 +84,7 @@ class ManageProjectExpenses extends ManageRelatedRecords
                 TextColumn::make('price')->label('Prijs')->money('EUR'),
                 TextColumn::make('users.business')->searchable()->label('Bedrijf'),
             ])
+            ->defaultPaginationPageOption(5)
             ->searchPlaceholder('Zoek op bedrijf')
             ->filters([
                 //

@@ -24,7 +24,6 @@ use Filament\Resources\Pages\Page;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
@@ -67,7 +66,7 @@ class ProjectResource extends Resource
                                     ->required(),
                                 TextInput::make('duration_in_days')
                                     ->numeric()
-                                    ->label('Duur in dagen')
+                                    ->label('Man dagen')
                                     ->required(),
                             ]),
                     ])
@@ -92,6 +91,7 @@ class ProjectResource extends Resource
                 TextColumn::make('address')->label('Adres')
                     ->searchable(),
                 TextColumn::make('users.business')->label('Bedrijf'),
+                TextColumn::make('duration_in_days')->label('Man dagen'),
                 IconColumn::make('is_finished')
                     ->icon(fn (Model $record) => $record->is_finished ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
                     ->colors([
@@ -101,6 +101,7 @@ class ProjectResource extends Resource
                     ->label('Status'),
                 TextColumn::make('updated_at')->hidden()
             ])
+            ->defaultPaginationPageOption(5)
             ->searchPlaceholder('Zoek op adres')
             ->defaultSort('updated_at', 'desc')
             ->filters([
@@ -127,7 +128,7 @@ class ProjectResource extends Resource
                             ->numeric()
                             ->label('Klusprijs')
                             ->money('EUR'),
-                        TextEntry::make('duration_in_days')->label('Duur in dagen'),
+                        TextEntry::make('duration_in_days')->label('Man dagen'),
                     ])
                     ->columns(2),
                 InfolistSection::make()

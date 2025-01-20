@@ -84,6 +84,7 @@ class ManageProjectActivities extends ManageRelatedRecords
                     ->summarize(Sum::make()->label('Uren')),
                 TextColumn::make('users.business')->searchable()->label('Bedrijf'),
             ])
+            ->defaultPaginationPageOption(5)
             ->defaultSort('created_at', 'desc')
             ->searchPlaceholder('Zoek op bedrijf')
             ->filters([
