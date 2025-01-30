@@ -4,6 +4,7 @@ namespace App\Filament\Resources\ProjectResource\Pages;
 
 use App\Filament\Resources\ProjectResource;
 use App\Models\User;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -56,6 +57,7 @@ class ManageProjectActivities extends ManageRelatedRecords
                     ->searchable(),
                 TextInput::make('description')->label('Omschrijving'),
                 TextInput::make('hour_amount')->numeric()->label('Uren')->required(),
+                DatePicker::make('activity_date')->label('Datum')->required(),
             ])
             ->columns(1);
     }
@@ -79,13 +81,13 @@ class ManageProjectActivities extends ManageRelatedRecords
     {
         return $table
             ->columns([
-                TextColumn::make('created_at')->label('Datum')->date(),
+                TextColumn::make('activity_date')->label('Datum')->date(),
                 TextColumn::make('hour_amount')->label('Uren')
                     ->summarize(Sum::make()->label('Uren')),
                 TextColumn::make('users.business')->searchable()->label('Bedrijf'),
             ])
             ->defaultPaginationPageOption(5)
-            ->defaultSort('created_at', 'desc')
+            ->defaultSort('activity_date', 'desc')
             ->searchPlaceholder('Zoek op bedrijf')
             ->filters([
                 //

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('description')->nullable();
             $table->integer('hour_amount');
+            $table->date('activity_date');
             $table->foreignId('users_id')->references('id')->on('users');
             $table->foreignId('projects_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();

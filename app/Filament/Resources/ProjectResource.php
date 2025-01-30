@@ -200,7 +200,6 @@ class ProjectResource extends Resource
     public static function getWidgets(): array
     {
         return [
-            ProjectResource\Widgets\ProjectOverview::class,
         ];
     }
 
