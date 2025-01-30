@@ -11,6 +11,11 @@ class CreateProject extends CreateRecord
 
     protected static ?string $title = 'Project aanmaken';
 
+    public function getBreadcrumb(): string
+    {
+        return 'aanmaken';
+    }
+
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');

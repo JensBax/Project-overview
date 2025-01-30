@@ -18,6 +18,7 @@ class Activities extends Model
     protected $fillable = [
         'description',
         'hour_amount',
+        'activity_date',
         'users_id',
         'projects_id',
     ];

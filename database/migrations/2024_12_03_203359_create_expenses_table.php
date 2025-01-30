@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('description')->nullable();
             $table->double('price');
+            $table->string('invoice')->nullable();
             $table->foreignId('users_id')->references('id')->on('users');
             $table->foreignId('projects_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();
